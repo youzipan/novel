@@ -1,0 +1,27 @@
+<!--
+       创建demo需要的索引表结构
+   -->
+<property name="createDemoIndice">
+    <![CDATA[
+    {
+            "settings": {
+                "number_of_shards": 6,
+                "number_of_replicas": 1,
+                "index.refresh_interval": "5s"
+            },
+            "mappings": {
+                "properties": {
+
+                    "createTime": {
+                        "type": "date",
+                        "format":"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||yyyy-MM-dd HH:mm:ss||epoch_millis"
+                    },
+
+                    "name": {
+                        "type": "keyword"
+                    }
+                }
+            }
+        }
+]]>
+</property>

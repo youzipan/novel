@@ -1,0 +1,104 @@
+server:
+  port: 9999
+#magic-api:
+#  web: /magic/web
+#  resource:
+#    location: D://data/magic-api
+
+#jasypt:
+#  encryptor:
+#    password: you-guess
+#
+#spring:
+#  datasource:
+#    url: jdbc:mysql://10.86.216.180:33306/order_form?useCursorFetch=true&useUnicode=true&characterEncoding=utf-8&useSSL=false
+#
+#  ##mysql 8 url配置样例
+#  #db.url = jdbc:mysql://192.168.0.188:3308/braineex?useCursorFetch=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+#  jdbcFetchSize: 10000
+jeesuite:
+  task:
+    registryType: none
+    registryServers: 1
+    groupName: demo
+    scanPackages: com.example.demo
+    threadPoolSize: 3
+
+
+spring:
+  datasource:
+    name: dataSource
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.86.216.180:33306/order_form?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: order_form
+    password: 7W@b3ZYb
+  sqltoy:
+    # 这里要注意，指定sql文件的目录(是目录不是具体文件或文件匹配表达式),多个可以用逗号分隔，会自动向下寻找
+    sqlResourcesDir: classpath:/com/example/demo
+    # 缓存翻译的配置
+    translateConfig: classpath:sqltoy-translate.xml
+    # debug模式会打印执行sql
+    debug: true
+    # 跨数据库函数自适配,比如:mysql的sql可以自动适用于oracle
+    #functionConverts: default
+    # 提供统一字段:createBy createTime updateBy updateTime 等字段补漏性(为空时)赋值(可选配置)
+    #unifyFieldsHandler: com.sqltoy.plugins.SqlToyUnifyFieldsHandler
+    # sql执行超过多长时间则进行日志输出,用于监控哪些慢sql(可选配置:默认30秒)
+    #printSqlTimeoutMillis: 300000
+# Sa-Token配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: satoken
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+#    username: root
+#    password: finn123
+
+  # thymeleaf页面模板配置
+
+#
+#  elasticsearch:
+#    bboss:
+#      elasticUser: elastic
+#      elasticPassword: geely.trip.2021
+#      elasticsearch:
+#        rest:
+#          hostNames: 10.190.49.79:7200,10.190.49.78:7200,10.190.49.76:7200
+#          ##hostNames: 192.168.8.25:9200,192.168.8.26:9200,192.168.8.27:9200  ##集群地址配置
+#        dateFormat: yyyy.MM.dd
+#        timeZone: Asia/Shanghai
+#        showTemplate: true
+#        discoverHost: false
+#      dslfile:
+#        refreshInterval: -1
+#      http:
+#        timeoutConnection: 50000
+#        timeoutSocket: 50000
+#        connectionRequestTimeout: 5000
+#        retryTime: 1
+#        maxLineLength: -1
+#        maxHeaderCount: 200
+#        maxTotal: 400
+#        defaultMaxPerRoute: 200
+#        soReuseAddress: false
+#        soKeepAlive: false
+#        timeToLive: 3600000
+#        keepAlive: 3600000
+#        keystore:
+#        keyPassword:
+#        hostnameVerifier:
