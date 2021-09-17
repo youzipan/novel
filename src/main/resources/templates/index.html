@@ -1,0 +1,346 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>个人小说网站</title>
+    <#assign path="${springMacroRequestContext.getContextPath()}">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script
+            type="text/javascript" src="/layui/layui.js"></script>
+    <script
+            type="text/html" id="switchTpl">
+        <input type="checkbox" name="endFlag" value="{{d.serialNo}}" lay-skin="switch" lay-text="完结|连载中"
+               lay-filter="sexDemo" {{ d.endFlag== 1 ? 'checked' : '' }}>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="downloadall">爬取所有章节</button>
+        </div>
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-xs" lay-event="download">爬取最新章节</a>
+        <a class="layui-btn layui-btn-xs" lay-event="output">导出txt</a>
+    </script>
+    <script type="text/html" id="novelName">
+        <a href="detail/{{d.serialNo}}" class="layui-table-link" target="_blank">{{ d.novelName }}</a>
+    </script>
+    <script type="text/javascript">
+		var index;
+		layui.use('element', function() {
+			var $ = layui.jquery, element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+		});
+
+		layui.use([ 'table', 'layer' ], function() {
+			var table = layui.table, form = layui.form;
+
+			table.render({
+				elem : '#test',
+				url : '/novelList',
+				toolbar : '#toolbarDemo',
+				cellMinWidth : 80,
+				cols : [ [ {
+					field : 'serialNo',
+					width : 80,
+					title : 'ID',
+					sort : true,
+					hide : true
+				}, {
+					field : 'novelName',
+					title : '小说名',
+					templet : '#novelName'
+				}, {
+					field : 'endFlag',
+					title : '状态',
+					width : 100,
+					templet : '#switchTpl',
+					unresize : true
+				}, {
+					field : 'lastTime',
+					title : '上次爬取时间',
+					width : 250
+				}, {
+					fixed : 'right',
+					title : '操作',
+					toolbar : '#barDemo',
+					width : 400
+				} ] ],
+				page : true
+			});
+			form.on('switch(sexDemo)', function(obj) {
+				updateEndFlag(this.value, obj.elem.checked);
+				return false;
+			});
+			//监听提交
+			form.on('submit(demo1)', function(data) {
+				//submit(data.field);
+				$.ajax({
+					type : "POST",
+					url : "/save",
+					data : JSON.stringify(data.field),
+					contentType : "application/json;charset-UTF-8",
+					success : function(msg) {
+						layer.msg("保存成功", {
+							icon : 1,
+							time : 1000
+						}, function() {
+							layer.close(index);
+						});
+
+					}
+				});
+				return false;
+			});
+			//头工具栏事件
+			table.on('toolbar(test)', function(obj) {
+				switch (obj.event) {
+				case 'downloadall':
+					var index2 = layer.load(2);
+					//downloadall();
+					$.ajax({
+						type : "POST",
+						url : "/downloadall",
+						contentType : "application/json;charset-UTF-8",
+						success : function(msg) {
+							layer.close(index2);
+							layer.msg("爬取完毕，一共爬取" + msg + "章", {
+								icon : 1,
+								time : 1000
+							});
+						}
+					});
+
+					break;
+				}
+				;
+			});
+
+			//监听行工具事件
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				//console.log(obj)
+				if (obj.event === 'del') {
+					layer.confirm('确定删除小说吗', function(index) {
+						//del(data.serialNo);
+
+						$.ajax({
+							type : "POST",
+							url : "/delete",
+							data : JSON.stringify({
+								serialNo : data.serialNo
+							}),
+							contentType : "application/json;charset-UTF-8",
+							success : function(msg) {
+								layer.msg("删除成功", {
+									icon : 1,
+									time : 1000
+								});
+							}
+						});
+
+						obj.del();
+						layer.close(index);
+					});
+				} else if (obj.event === 'edit') {
+					index = layer.open({
+						title:'小说编辑',
+						area: ['400px', '300px'],
+						  type: 2, 
+						  content: '/novelInfo/'+data.serialNo //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+						});
+					
+				} else if (obj.event === 'download') {
+					//download(data.serialNo);
+					var index2 = layer.load(2);
+					$.ajax({
+						type : "POST",
+						url : "/download",
+						data : JSON.stringify({
+							serialNo : data.serialNo
+						}),
+						contentType : "application/json;charset-UTF-8",
+						success : function(msg) {
+							layer.close(index2);
+							layer.msg("爬取完毕，一共爬取" + msg + "章", {
+								icon : 1,
+								time : 1000
+							});
+						}
+					});
+
+				} else if (obj.event === 'output') {
+					output(data.serialNo);
+				}
+			});
+
+		});
+
+		function updateEndFlag(value, checked) {
+			check = 0;
+			if (checked) {
+				check = 1;
+			}
+			$.ajax({
+				type : "POST",
+				url : "/updateEndFlag",
+				data : JSON.stringify({
+					serialNo : value,
+					endFlag : check
+				}),
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+				}
+			});
+		};
+
+		function submit(data) {
+			$.ajax({
+				type : "POST",
+				url : "/save",
+				data : JSON.stringify(data),
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+					alert("保存成功");
+					layer.close(layer.index);
+				}
+			});
+		};
+		function del(data) {
+			$.ajax({
+				type : "POST",
+				url : "/delete",
+				data : JSON.stringify({
+					serialNo : data
+				}),
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+					alert("删除成功");
+				}
+			});
+		};
+		function download(data) {
+			$.ajax({
+				type : "POST",
+				url : "/download",
+				data : JSON.stringify({
+					serialNo : data
+				}),
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+					alert("爬取完毕，一共爬取" + msg + "章");
+				}
+			});
+		};
+		function downloadall() {
+			$.ajax({
+				type : "POST",
+				url : "/downloadall",
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+					alert("爬取完毕，一共爬取" + msg + "章");
+				}
+			});
+		};
+		function output(data) {
+			$.ajax({
+				type : "POST",
+				url : "/output",
+				data : JSON.stringify({
+					serialNo : data
+				}),
+				contentType : "application/json;charset-UTF-8",
+				success : function(msg) {
+					alert("导出完毕");
+				}
+			});
+		};
+
+    </script>
+</head>
+<body>
+
+
+<div class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">小说列表</li>
+        <li>新增小说</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+        </div>
+        <div class="layui-tab-item">
+
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">小说名字</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="novelName" name="novelName"
+                               autocomplete="off" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">小说链接</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="url" name="url" autocomplete="off"
+                               placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否完结</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="endFlag" value="1" title="是"> <input
+                            type="radio" name="endFlag" value="0" title="否">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--  <a class="downloadall" href="javascript:;">爬取所有最新章节</a> -->
+<br>
+<br>
+
+<form class="layui-form" id="novelForm" style="display: none;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">小说名字</label>
+        <div class="layui-input-inline">
+            <input type="text" id="novelName" name="novelName"
+                   autocomplete="off" placeholder="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">小说链接</label>
+        <div class="layui-input-inline">
+            <input type="text" id="url" name="url" autocomplete="off"
+                   placeholder="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否完结</label>
+        <div class="layui-input-block">
+            <input type="radio" name="endFlag" value="1" title="是"> <input
+                type="radio" name="endFlag" value="0" title="否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        </div>
+    </div>
+
+</form>
+</body>
+
+
+</html>

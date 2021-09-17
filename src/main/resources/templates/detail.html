@@ -1,0 +1,96 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>${novelName}</title>
+        <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="/layui/layui.js"></script>
+        	<script type="text/html" id="title">
+  <a href="/content/{{d.serialNo}}" class="layui-table-link" target="_blank">{{ d.title }}</a>
+	</script>
+		<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="output">导出选择章节</button>
+  </div>
+		</script>
+        <script type="text/javascript">
+        
+        layui.use('table', function(){
+      	  var table = layui.table,form = layui.form;
+      	  
+      	  table.render({
+      	    elem: '#test'
+      	    ,url:'/novelTitleList?novelNo='+$('#novelNo').val()
+     	    	 ,toolbar: '#toolbarDemo'
+     	    ,limit:20	
+     	   ,height: 800
+      	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+      	    ,cols: [[
+      	    	 {type: 'checkbox', fixed: 'left'}
+      	     , {field:'serialNo', width:80, title: 'ID', sort: true,hide:true}
+      	      ,{field:'title', title: '章节名', templet: '#title'}
+      	    ]]
+      	  ,page: true
+      	  });
+      	  
+      	 table.on('toolbar(test)', function(obj){
+      		var checkStatus = table.checkStatus(obj.config.id);
+      		console.log(checkStatus)
+     	    switch(obj.event){
+     	      case 'output':
+     	    		 var data = checkStatus.data;
+     	    		 output(data);
+     	      break;
+     	    };
+     	  });
+      	 
+        });
+        
+        
+        $(function(){
+	       
+	        $('.output').click(function(e){
+	        	output(e);
+	        })
+        })
+   
+       function output(data){
+        	var r=[];
+        	$.each(data,function(i,n){
+        		var g = {};
+        		g['novelNo']=n["novelNo"];
+        		g['serialNo']=n["serialNo"];
+        		r.push(g);
+        	})
+  
+        	$.ajax({
+        		   type: "POST",
+        		   url: "/outputList",
+        		   data:JSON.stringify(r),
+        		   contentType: "application/json;charset-UTF-8",
+        		   success: function(msg){
+        		     alert("导出完毕");
+        		   }
+        		});
+       };
+
+        </script>
+    </head>
+    <body>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		  <legend>${novelName}</legend>
+		</fieldset>
+
+        <input type="hidden" value=${novelNo} id="novelNo">
+       	<table class="layui-hide" id="test" lay-filter="test"></table>
+      <!--   <#list list as novel>
+
+	 
+	
+	    <input type="checkbox" data-title="${novel.serialNo?c}" data-novel="${novel.novelNo?c}">   <a href="/content/${novel.serialNo?c}"> ${novel.title}</a><br><br>
+	
+	   
+
+	</#list> -->
+    </body>
+</html>
