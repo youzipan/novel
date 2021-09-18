@@ -19,9 +19,10 @@ import java.util.Map;
 
 /**
  * 付讯签名认证
+ *
  * @param
+ * @author Fengping.Pan
  * @return
-* @author Fengping.Pan
  * @date 2021/9/1 16:46
  */
 public class SignUtils {
@@ -35,7 +36,7 @@ public class SignUtils {
 //        FuxunAccount fuxunAccount = meituanAccountStore.getMeituanAccount(accountCode);
 //        fuxunBaseRequest.setMethod(getMethod());
         fuxunBaseRequest.setVersion("1.0");
-        fuxunBaseRequest.setTimestamp(System.currentTimeMillis()/1000);
+        fuxunBaseRequest.setTimestamp(System.currentTimeMillis() / 1000);
         fuxunBaseRequest.setNonce("10000");
         fuxunBaseRequest.setPartnerId("geely");
         fuxunBaseRequest.setAppId("aaffbefb-75c8-44bc-8da2-8749d138885c");
@@ -70,15 +71,17 @@ public class SignUtils {
 //        request.setRoomTypeId(4L);
 //        FuxunRoomTYpeRequest request=new FuxunRoomTYpeRequest() ;
 //        request.setHotelId("24935");
-        FuxunOrderQueryRequest request=new FuxunOrderQueryRequest();
+        FuxunOrderQueryRequest request = new FuxunOrderQueryRequest();
         request.setReservationNumbers(Lists.newArrayList("FR20210906102214160666"));
         //具体业务数据
         fuxunBaseRequest.setData(JSONUtil.toJsonStr(request));
         System.out.println(createSign(fuxunBaseRequest, "TzcvPamdDs4W5QuU2HQb"));
     }
+
     /**
      * 生成签名
-     * @param request 入参
+     *
+     * @param request   入参
      * @param secretKey 秘钥
      * @return
      * @author Fengping.Pan
@@ -86,11 +89,11 @@ public class SignUtils {
      */
     public static String createSign(FuxunBaseRequest request, String secretKey) {
         Map<String, Object> params;
-        String jsonData =JSONUtil.toJsonStr(request);
+        String jsonData = JSONUtil.toJsonStr(request);
         params = JSONUtil.toBean(jsonData, Map.class);
         Map<String, String> needVerify = new HashMap<>();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if(entry.getValue() != null){
+            if (entry.getValue() != null) {
                 needVerify.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
         }
@@ -102,7 +105,7 @@ public class SignUtils {
             buffer.append("&").append(entry.getKey()).append("=").append(entry.getValue());
         }
         String secret = hmacSha1(buffer.substring(1), secretKey);
-        if(StringUtils.isEmpty(secret)){
+        if (StringUtils.isEmpty(secret)) {
             return null;
         }
         return secret;
@@ -110,7 +113,8 @@ public class SignUtils {
 
     /**
      * HMAC-SHA1算法加密
-     * @param inStr 待加密字符串
+     *
+     * @param inStr     待加密字符串
      * @param secretKey 秘钥
      * @return
      * @author Fengping.Pan
