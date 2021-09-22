@@ -15,6 +15,12 @@ public class R {
         return r;
     }
 
+    public static R fail(int code) {
+        R r = new R();
+        r.code = code;
+        return r;
+    }
+
     private int code = 0;
     private String msg;
     private long count;
