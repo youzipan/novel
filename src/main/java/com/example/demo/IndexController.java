@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -32,18 +33,18 @@ public class IndexController {
 
     @RequestMapping("detail/{serialNo}")
     public String detail(@PathVariable Long serialNo, Model model) {
-        Novel novel = novelDao.findById(serialNo).get();
+        Optional<Novel> novel = novelDao.findById(serialNo);
+        model.addAttribute("novelName", novel.map(Novel::getNovelName).orElse(""));
         List<NovelTitle> list = novelTitleDao.findByNovelNo(serialNo);
         model.addAttribute("list", list);
-        model.addAttribute("novelName", novel.getNovelName());
         model.addAttribute("novelNo", serialNo);
         return "detail";
     }
 
     @RequestMapping("novelInfo/{serialNo}")
     public String novelInfo(@PathVariable Long serialNo, Model model) {
-        Novel novel = novelDao.findById(serialNo).get();
-        model.addAttribute("novel", novel);
+        Optional<Novel> novel = novelDao.findById(serialNo);
+        model.addAttribute("novel", novel.orElseGet(Novel::new));
         return "novelInfo";
     }
 
