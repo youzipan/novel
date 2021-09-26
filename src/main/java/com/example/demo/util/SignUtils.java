@@ -2,7 +2,6 @@ package com.example.demo.util;
 
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.common.collect.Lists;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +39,7 @@ public class SignUtils {
         fuxunBaseRequest.setNonce("10000");
         fuxunBaseRequest.setPartnerId("geely");
         fuxunBaseRequest.setAppId("aaffbefb-75c8-44bc-8da2-8749d138885c");
+//        fuxunBaseRequest.setAppId("f1282050-8042-4642-9127-64b9bf8a7ad5");
 //        "{\"hotelId\":24935,\"ratePlanId\":10,\"roomTypeId\":4,\"clientId\":null,\"checkInAt\":\"2021-09-03\",\"checkOutAt\":\"2021-09-04\",\"priceCalendar\":null,\"payType\":3,\"priceType\":0,\"roomNum\":1,\"customerNum\":null,\"breakfastQty\":null,\"currency\":null,\"cacheRateId\":null,\"otherPayload\":null}"
 //        FuxunHotelListRequest request=new FuxunHotelListRequest();
 //        request.setHotelIds(Lists.newArrayList("24935"));
@@ -69,13 +69,21 @@ public class SignUtils {
 //        request.getPriceCalendar().add(p);
 ////        request.setBreakfastQty(1);
 //        request.setRoomTypeId(4L);
-//        FuxunRoomTYpeRequest request=new FuxunRoomTYpeRequest() ;
-//        request.setHotelId("24935");
-        FuxunOrderQueryRequest request = new FuxunOrderQueryRequest();
-        request.setReservationNumbers(Lists.newArrayList("FR20210906102214160666"));
+        FuxunRoomTYpeRequest request=new FuxunRoomTYpeRequest() ;
+        request.setHotelId("24935");
+//        FuxunOrderQueryRequest request = new FuxunOrderQueryRequest();
+//        request.setReservationNumbers(Lists.newArrayList("FR20210924105391640894"));
+//        GetRoomPriceUnContractRequest request = new GetRoomPriceUnContractRequest();
+//        request.setHotelId(Long.parseLong("24935"));
+//        request.setCheckInAt("2021-09-24");
+//        request.setCheckOutAt("2021-09-25");
+//        request.setClientId("41");
         //具体业务数据
         fuxunBaseRequest.setData(JSONUtil.toJsonStr(request));
+        System.out.println(JSONUtil.toJsonStr(fuxunBaseRequest));
+
         System.out.println(createSign(fuxunBaseRequest, "TzcvPamdDs4W5QuU2HQb"));
+//        System.out.println(createSign(fuxunBaseRequest, "GJVRiMpAbSZsQjN8kNUT"));
     }
 
     /**

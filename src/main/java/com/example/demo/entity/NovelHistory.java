@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "novel")
-public class Novel {
+public class NovelHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,16 +19,6 @@ public class Novel {
 	private String novelUrl;
 
 	private int endFlag;
-
-	private String lastTime;
-
-	public String getLastTime() {
-		return lastTime;
-	}
-
-	public void setLastTime(String lastTime) {
-		this.lastTime = lastTime;
-	}
 
 	public Long getSerialNo() {
 		return serialNo;

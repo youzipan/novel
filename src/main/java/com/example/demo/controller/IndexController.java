@@ -1,5 +1,11 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.entity.Novel;
+import com.example.demo.entity.NovelContent;
+import com.example.demo.dao.NovelContentDao;
+import com.example.demo.dao.NovelDao;
+import com.example.demo.entity.NovelTitle;
+import com.example.demo.dao.NovelTitleDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

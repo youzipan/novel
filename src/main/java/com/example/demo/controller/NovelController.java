@@ -1,8 +1,15 @@
-package com.example.demo;
+package com.example.demo.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
+import com.example.demo.entity.Novel;
+import com.example.demo.entity.NovelContent;
+import com.example.demo.dao.NovelContentDao;
+import com.example.demo.dao.NovelDao;
+import com.example.demo.entity.NovelTitle;
+import com.example.demo.dao.NovelTitleDao;
+import com.example.demo.R;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

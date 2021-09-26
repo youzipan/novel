@@ -1,7 +1,8 @@
-package com.example.demo;
+package com.example.demo.dao;
 
 import java.util.List;
 
+import com.example.demo.entity.NovelTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
