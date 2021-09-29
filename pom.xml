@@ -158,6 +158,22 @@
 			<artifactId>forest-spring-boot-starter</artifactId>
 			<version>1.5.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.teasoft</groupId>
+			<artifactId>bee</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.teasoft</groupId>
+			<artifactId>honey</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+		<!--for log framework,Excel(poi) -->
+		<dependency>
+			<groupId>org.teasoft</groupId>
+			<artifactId>bee-ext</artifactId>
+			<version>1.9.5</version>
+		</dependency>
 	</dependencies>
 
 	<build>
